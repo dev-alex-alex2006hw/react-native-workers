@@ -50,8 +50,12 @@ public class ReactContextBuilder {
     }
 
     public ReactApplicationContext build() throws Exception {
+<<<<<<< HEAD
         JavaScriptExecutor jsExecutor = (new JSCJavaScriptExecutor.Factory(new WritableNativeMap())).create();
 //      JavaScriptExecutor jsExecutor = new JSCJavaScriptExecutor.Factory().create(new WritableNativeMap());
+=======
+        JavaScriptExecutor jsExecutor = new JSCJavaScriptExecutor.Factory(new WritableNativeMap()).create();
+>>>>>>> 41795eba6d761e678fc56fb4ef5bd216b8433323
 
         // fresh new react context
         final ReactApplicationContext reactContext = new ReactApplicationContext(parentContext);

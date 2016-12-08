@@ -149,7 +149,7 @@ public class WorkerModule extends ReactContextBaseJavaModule implements Lifecycl
             @Override
             public void run() {
                 for (int workerId : workers.keySet()) {
-                    workers.get(workerId).terminate();
+                    stopWorker(workerId);
                 }
             }
         });
@@ -177,7 +177,8 @@ public class WorkerModule extends ReactContextBaseJavaModule implements Lifecycl
 
     private JSBundleLoader createReleaseBundleLoader(String jsFileName, String jsFileSlug) {
         Log.d(TAG, "createReleaseBundleLoader - reading file from assets");
-        return JSBundleLoader.createFileLoader( "assets://workers/" + jsFileSlug + ".bundle");
+        // return JSBundleLoader.createFileLoader( "assets://workers/" + jsFileSlug + ".bundle");
+        return JSBundleLoader.createAssetLoader(getReactApplicationContext(), "assets://workers/" + jsFileSlug + ".bundle");
     }
 
     private ReactInstanceManager getReactInstanceManager() {
