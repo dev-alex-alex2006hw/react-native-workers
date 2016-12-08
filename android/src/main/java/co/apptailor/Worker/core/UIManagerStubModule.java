@@ -8,7 +8,7 @@ public class UIManagerStubModule extends ReactContextBaseJavaModule {
     public UIManagerStubModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
-    @ReactNative
+    @ReactMethod
     @Override
     public String getName() {
         return "UIManager";
