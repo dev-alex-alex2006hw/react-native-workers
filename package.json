@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/devfd/react-native-workers/issues"
   },
-  "homepage": "https://github.com/devfd/react-native-workers#readme"
+  "homepage": "https://github.com/devfd/react-native-workers#readme",
+  "dependencies" :{
+     "react-native":"~0.35.0"
+  }
 }

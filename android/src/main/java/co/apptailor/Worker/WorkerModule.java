@@ -33,7 +33,7 @@ import okio.Sink;
 public class WorkerModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
     private String TAG = "WorkerManager";
-    private HashMap<Integer, JSWorker> workers;
+    private HashMap<String, JSWorker> workers;
 
     private ReactPackage additionalWorkerPackages[];
 
@@ -82,7 +82,7 @@ public class WorkerModule extends ReactContextBaseJavaModule implements Lifecycl
     }
 
     @ReactMethod
-    public void stopWorker(final int workerId) {
+    public void stopWorker(final String workerId) {
         final JSWorker worker = workers.get(workerId);
         if (worker == null) {
             Log.d(TAG, "Cannot stop worker - worker is null for id " + workerId);
@@ -122,7 +122,7 @@ public class WorkerModule extends ReactContextBaseJavaModule implements Lifecycl
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                for (int workerId : workers.keySet()) {
+                for (String workerId : workers.keySet()) {
                     workers.get(workerId).onHostResume();
                 }
             }
@@ -134,7 +134,7 @@ public class WorkerModule extends ReactContextBaseJavaModule implements Lifecycl
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                for (int workerId : workers.keySet()) {
+                for (String workerId : workers.keySet()) {
                     workers.get(workerId).onHostPause();
                 }
             }
@@ -148,7 +148,7 @@ public class WorkerModule extends ReactContextBaseJavaModule implements Lifecycl
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                for (int workerId : workers.keySet()) {
+                for (String workerId : workers.keySet()) {
                     stopWorker(workerId);
                 }
             }

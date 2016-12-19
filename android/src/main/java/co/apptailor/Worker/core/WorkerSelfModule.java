@@ -7,14 +7,14 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class WorkerSelfModule extends ReactContextBaseJavaModule {
 
-    private int workerId;
+    private String workerId;
     private ReactApplicationContext parentContext;
 
     public WorkerSelfModule(ReactApplicationContext context) {
         super(context);
     }
 
-    public void initialize(int workerId, ReactApplicationContext parentContext) {
+    public void initialize(String workerId, ReactApplicationContext parentContext) {
         this.parentContext = parentContext;
         this.workerId = workerId;
     }

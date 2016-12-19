@@ -9,17 +9,26 @@ import co.apptailor.Worker.core.ReactContextBuilder;
 import co.apptailor.Worker.core.WorkerSelfModule;
 
 public class JSWorker {
-    private int id;
+    private String id;
 
     private String jsSlugname;
     private ReactApplicationContext reactContext;
 
-    public JSWorker(String jsSlugname) {
-        this.id = Math.abs(new Random().nextInt());
+    public JSWorker(String jsSlugname){
+        this(jsSlugname, true);
+    }
+
+    public JSWorker(String jsSlugname, Boolean random) {
+        if (random){
+            this.id = jsSlugname + Math.abs(new Random().nextInt());
+        }
+        else{
+          this.id = jsSlugname + "0";
+        }
         this.jsSlugname = jsSlugname;
     }
 
-    public int getWorkerId() {
+    public String getWorkerId() {
         return this.id;
     }
 
