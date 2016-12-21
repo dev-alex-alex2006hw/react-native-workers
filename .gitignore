@@ -74,3 +74,4 @@ android/keystores/debug.keystore
 #Eclipse
 .settings/
 .project
+.tern-project
