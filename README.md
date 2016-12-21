@@ -1,3 +1,59 @@
+#  Patch by Bill Wang
+1. Fixed code to be compatible with react native 0.35
+2. Add patch to compile properly with Release on Android
+
+# Disclaimer
+
+I am not going to support this code base in long term. Will only update when necessary.
+
+
+## Android release fix
+
+In your code, especially for release scenario, please load the worker directly.
+`      this.worker = new Worker('Worker.js')`, even if worker is not stored under your root folder.
+
+So enable some fancy logic to toggle between release and development mode.
+
+Add following tasks to your build.gradle in `android/app/build.gradle`
+
+Configure the dirs properly
+
+`
+// Hot fix to enable worker compilation from 
+// https://github.com/facebook/react-native/blob/master/react.gradle
+gradle.projectsEvaluated {
+	// register task before react-native bundle to target asset
+    processReleaseManifest.dependsOn(compileReleaseWorker)
+}
+task compileReleaseWorker(type: Exec) {
+	// set up env and variables
+	def ENTRY_FILE_BASENAME 
+	def resourcesDirRelease="$buildDir/intermediates/assets/release/workers"
+	def collection =fileTree("../../App/Lib/") {
+		include '*Worker.js'
+	}
+	// make sure target dir exists
+	if( !new File(resourcesDirRelease).exists() ) {
+  		new File(resourcesDirRelease).mkdirs()
+	}
+	
+	workingDir '../../'
+	def BUNDLE_FILE
+	// iterate over workers, and bundle them
+	collection.each{ File file ->
+		ENTRY_FILE_BASENAME = file.name.split("\\.")[0]
+		BUNDLE_FILE="$resourcesDirRelease/$ENTRY_FILE_BASENAME"+".bundle"
+		commandLine("node", "node_modules/react-native/local-cli/cli.js", "bundle", "--platform", "android", 
+		"--dev", "false", "--reset-cache", "--entry-file", file, "--bundle-output", BUNDLE_FILE, 
+		"--assets-dest", resourcesDirRelease)
+    }
+ `
+
+
+
+
+
+
 # react-native-workers
 
 Spin worker threads and run CPU intensive tasks in the background. Bonus point on Android you can keep a worker alive even when a user quit the application :fireworks:
@@ -125,4 +181,6 @@ self.postMessage("hello from worker");
 - [x] iOS - download worker files from same location as main bundle
 - [ ] script to package worker files for release build
 - [x] load worker files from disk if not debug
+
+
 
