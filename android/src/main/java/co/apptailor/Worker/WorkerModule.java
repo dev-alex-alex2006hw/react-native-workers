@@ -29,7 +29,6 @@ import okhttp3.Response;
 import okio.Okio;
 import okio.Sink;
 
-
 public class WorkerModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
     private String TAG = "WorkerManager";
@@ -52,8 +51,10 @@ public class WorkerModule extends ReactContextBaseJavaModule implements Lifecycl
     @ReactMethod
     public void startWorker(final String jsFileName, final Promise promise) {
         Log.d(TAG, "Starting web worker - " + jsFileName);
-
-        String jsFileSlug = jsFileName.contains("/") ? jsFileName.replaceAll("/", "_") : jsFileName;
+        // Pattern p = Pattern.compile("([^/]*).js");
+        // Matcher m = p.matcher("jsFileName");
+// m.find();
+        String jsFileSlug = jsFileName.contains("/") ? (new File(jsFileName)).getName().toString() : jsFileName;
 
         JSBundleLoader bundleLoader = getDevSupportManager().getDevSupportEnabled()
                 ? createDevBundleLoader(jsFileName, jsFileSlug)
