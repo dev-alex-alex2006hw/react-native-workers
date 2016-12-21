@@ -36,15 +36,6 @@ repositories {
        url "$rootDir/../node_modules/react-native/android"
    }
 }
-def resourcesDirRelease="$buildDir/intermediates/res/merged/release"
-
-task compileReleaseWorker(type: Exec) {
-	workingDir '../'
-	commandLine("node", "node_modules/react-native/local-cli/cli.js", "bundle", "--platform", "android", "--dev", "false",
-                            "--reset-cache", "--entry-file", "BleWorker.js", "--bundle-output", "BleWorker.bundle", "--assets-dest", resourcesDirRelease)
-}
-
-assembleRelease.dependsOn(compileReleaseWorker)
 dependencies {
     compile 'com.facebook.react:react-native:+'
 }
