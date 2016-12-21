@@ -2,24 +2,19 @@
 1. Fixed code to be compatible with react native 0.35
 2. Add patch to compile properly with Release on Android
 3. Document iOS release patch
+
 # Disclaimer
 
 I am not going to support this code base in long term. Will only update when necessary.
 
-
 ## Android Release Patch
-
-In your code, especially for release scenario, please load the worker directly.
-`      this.worker = new Worker('Worker.js')`, even if worker is not stored under your root folder.
-
-So enable some fancy logic to toggle between release and development mode.
 
 Add following tasks to your build.gradle in `android/app/build.gradle`
 
 Configure the dirs properly
 
-`
-// Hot fix to enable worker compilation from 
+```
+// Hot fix to enable worker compilation from
 // https://github.com/facebook/react-native/blob/master/react.gradle
 gradle.projectsEvaluated {
 	// register task before react-native bundle to target asset
@@ -27,7 +22,7 @@ gradle.projectsEvaluated {
 }
 task compileReleaseWorker(type: Exec) {
 	// set up env and variables
-	def ENTRY_FILE_BASENAME 
+	def ENTRY_FILE_BASENAME
 	def resourcesDirRelease="$buildDir/intermediates/assets/release/workers"
 	def collection =fileTree("../../App/Lib/") {
 		include '*Worker.js'
@@ -36,31 +31,35 @@ task compileReleaseWorker(type: Exec) {
 	if( !new File(resourcesDirRelease).exists() ) {
   		new File(resourcesDirRelease).mkdirs()
 	}
-	
+
 	workingDir '../../'
 	def BUNDLE_FILE
 	// iterate over workers, and bundle them
 	collection.each{ File file ->
 		ENTRY_FILE_BASENAME = file.name.split("\\.")[0]
 		BUNDLE_FILE="$resourcesDirRelease/$ENTRY_FILE_BASENAME"+".bundle"
-		commandLine("node", "node_modules/react-native/local-cli/cli.js", "bundle", "--platform", "android", 
-		"--dev", "false", "--reset-cache", "--entry-file", file, "--bundle-output", BUNDLE_FILE, 
+		commandLine("node", "node_modules/react-native/local-cli/cli.js", "bundle", "--platform", "android",
+		"--dev", "false", "--reset-cache", "--entry-file", file, "--bundle-output", BUNDLE_FILE,
 		"--assets-dest", resourcesDirRelease)
     }
- `
+ ```
 
 ## iOS Release Patch
-Credit to therealgilles, [see issue] (https://github.com/devfd/react-native-workers/issues/21)
+Credit to @therealgilles,[see issue] (https://github.com/devfd/react-native-workers/issues/21)
+
 Create a react-native-workers.sh script (see below) inside the ios folder and add it to Build Phases > Bundle React Native code and images:
+
 ``export NODE_BINARY=node
 ./react-native-workers.sh
 ../node_modules/react-native/packager/react-native-xcode.sh
 ``
 
 --- ios/react-native-workers.sh ---
-Change App/Workers and App/Workers/*Worker.js to match the location and filename pattern of your workers.
 
-``#!/bin/bash
+Change `App/Workers` and `App/Workers/*Worker.js` to match the location and filename pattern of your workers.
+
+```
+#!/bin/bash
 # Copyright (c) 2015-present, Facebook, Inc.
 # All rights reserved.
 #
@@ -154,7 +153,8 @@ do
     exit 2
   fi
 
-done``
+done
+```
 
 # react-native-workers
 
@@ -283,6 +283,3 @@ self.postMessage("hello from worker");
 - [x] iOS - download worker files from same location as main bundle
 - [ ] script to package worker files for release build
 - [x] load worker files from disk if not debug
-
-
-
