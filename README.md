@@ -21,15 +21,16 @@ gradle.projectsEvaluated {
     processReleaseManifest.dependsOn(compileReleaseWorker)
 }
 task compileReleaseWorker(type: Exec) {
+ doFirst {
 	// set up env and variables
-	def ENTRY_FILE_BASENAME
+	def ENTRY_FILE_BASENAME 
 	def resourcesDirRelease="$buildDir/intermediates/assets/release/workers"
 	def collection =fileTree("../../App/Lib/") {
 		include '*Worker.js'
 	}
 	// make sure target dir exists
-	if( !new File(resourcesDirRelease).exists() ) {
-  		new File(resourcesDirRelease).mkdirs()
+	if( !(new File(resourcesDirRelease)).exists() ) {
+  		(new File(resourcesDirRelease)).mkdirs()
 	}
 
 	workingDir '../../'
@@ -38,10 +39,14 @@ task compileReleaseWorker(type: Exec) {
 	collection.each{ File file ->
 		ENTRY_FILE_BASENAME = file.name.split("\\.")[0]
 		BUNDLE_FILE="$resourcesDirRelease/$ENTRY_FILE_BASENAME"+".bundle"
-		commandLine("node", "node_modules/react-native/local-cli/cli.js", "bundle", "--platform", "android",
-		"--dev", "false", "--reset-cache", "--entry-file", file, "--bundle-output", BUNDLE_FILE,
+		commandLine("node", "node_modules/react-native/local-cli/cli.js", "bundle", "--platform", "android", 
+		"--dev", "false", "--reset-cache", "--entry-file", file, "--bundle-output", BUNDLE_FILE, 
 		"--assets-dest", resourcesDirRelease)
     }
+  }
+}
+
+
  ```
 
 ## iOS Release Patch
