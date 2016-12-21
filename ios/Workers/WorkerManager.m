@@ -25,7 +25,7 @@ RCT_REMAP_METHOD(startWorker,
 
   int workerId = abs(arc4random());
 
-  NSURL *workerURL = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:name fallbackResource:nil];
+  NSURL *workerURL = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:name fallbackResource:name];
   NSLog(@"starting Worker %@", [workerURL absoluteString]);
 
 
